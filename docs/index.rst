@@ -6,15 +6,20 @@
 Welcome to Belt Badgers's documentation!
 ========================================
 
-Contents:
+-----------------
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 2
 
+   getting_started
+   design
+   development
 
-
+------------------
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
