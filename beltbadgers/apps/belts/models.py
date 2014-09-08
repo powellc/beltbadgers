@@ -59,9 +59,9 @@ class Discipline(models.Model):
     achieving the sempai status
 
     Disciplines are the primary interface to the application for a Student. They
-    choose a Discipline and are presented with a series of Tests to rise in Rank.
+    choose a Discipline and are presented with a series of Tests to rise in Badge.
 
-    Disciplines enforce whether Students are allowed to jump Ranks or whether they
+    Disciplines enforce whether Students are allowed to jump Badges or whether they
     have to take Tests in the order specified by the Tests.
 
     """
@@ -96,7 +96,7 @@ class Discipline(models.Model):
         tests = {}
         if self.test_in_order:
             if student:
-                attempts_at_this_discipline = student.testattempt_set.filter(test__discipline=self).order_by('test__rank_awarded__order')
+                attempts_at_this_discipline = student.testattempt_set.filter(test__discipline=self).order_by('test__badge_awarded__order')
                 for attempt in attempts_at_this_discipline:
                     if attempt.passed:
                         tests[attempt.test] = True
@@ -114,13 +114,13 @@ class Discipline(models.Model):
         ordering = ['-created']
 
 
-class Rank(models.Model):
+class Badge(models.Model):
     """
-    A Rank
+    A Badge
 
     Used inside of a Discipline and are associated with badges. As students
-    complete Tests in a Discipline they earn ranks in the order specified here,
-    with 1 being the lowest and any number of other ranks.
+    complete Tests in a Discipline they earn badges in the order specified here,
+    with 1 being the lowest and any number of other badges.
 
     By default, the dojo app comes with a fixture setting a up a simplified Kyu-style:
 
@@ -133,16 +133,16 @@ class Rank(models.Model):
 
     But any number can be created.
 
-    Additionally, Ranks are not tied to a specific discpline, but are specified on
-    a Test level, so Tests determine what Rank should be given on completion. The
-    Discipline model is then required to enforce Students rising ranks in order.
-    This also allows Ranks to be given out in any order (if a Discipline allows,
+    Additionally, Badges are not tied to a specific discpline, but are specified on
+    a Test level, so Tests determine what Badge should be given on completion. The
+    Discipline model is then required to enforce Students rising badges in order.
+    This also allows Badges to be given out in any order (if a Discipline allows,
     Students could "jump" to the Brown belt).
 
     TODO: Hook up Mozilla's OpenBadges here, probably using django-obi
 
     """
-    title = models.CharField(_('Rank'), max_length=100)
+    title = models.CharField(_('Badge'), max_length=100)
     slug = AutoSlugField(_('Slug'), populate_from='title')
     order = models.IntegerField(_('Order'), max_length=2)
     created = models.DateTimeField(null=True, blank=True, default=datetime.now(), editable=False)
@@ -157,12 +157,12 @@ class Rank(models.Model):
 class Test(models.Model):
     """ A Test
 
-    How a Student climbs Ranks in a Discipline. A Test presents the Student with
+    How a Student climbs Badges in a Discipline. A Test presents the Student with
     a set of TestQuestions and then auto-grades it on submission using the
     associated TestAnswer.
     """
     discipline = models.ForeignKey(Discipline)
-    rank_awarded = models.ForeignKey(Rank,
+    badge_awarded = models.ForeignKey(Badge,
                                      help_text='Awarded to a student on successful completion of the test.')
     slug = models.SlugField(_('Slug'), editable=False)
     pass_percentage = models.IntegerField(_('Pass Percentage'), blank=True, null=True,
@@ -175,20 +175,20 @@ class Test(models.Model):
         return self.testquestion_set.count()
 
     def __unicode__(self):
-        return u'%s test for %s' % (self.rank_awarded, self.discipline)
+        return u'%s test for %s' % (self.badge_awarded, self.discipline)
 
     def get_absolute_url(self):
-        return reverse('dojo-test-detail', kwargs={'discipline_slug': self.discipline.slug, 'slug': self.rank_awarded.slug})
+        return reverse('belts-test-detail', kwargs={'discipline_slug': self.discipline.slug, 'slug': self.badge_awarded.slug})
 
     def save(self, *args, **kwargs):
-        self.slug = self.rank_awarded.slug
+        self.slug = self.badge_awarded.slug
         super(Test, self).save(*args, **kwargs)
 
 
     class Meta:
         verbose_name = _("Test")
         verbose_name_plural = _("Test")
-        ordering = ["rank_awarded__order"]
+        ordering = ["badge_awarded__order"]
 
 
 class TestAnswer(models.Model):
@@ -273,9 +273,9 @@ class TestAttempt(models.Model):
         return u'Attempt at %s' % (self.test)
 
     def get_absolute_url(self):
-        return reverse('dojo-test-attempts', kwargs={'discipline_slug': self.test.discipline.slug, 'test_slug': self.test.slug, 'pk': self.pk})
+        return reverse('belts-test-attempts', kwargs={'discipline_slug': self.test.discipline.slug, 'test_slug': self.test.slug, 'pk': self.pk})
 
     class Meta:
         verbose_name = _('Test Attempt')
         verbose_name_plural = _('Test Attempts')
-        ordering = ["test", "test__rank_awarded"]
+        ordering = ["test", "test__badge_awarded"]

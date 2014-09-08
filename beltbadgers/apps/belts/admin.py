@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django.forms import widgets
 from .models import Student, Dojo, Discipline, Rank, Test, TestQuestion, TestAnswer, TestAttempt
@@ -7,7 +8,7 @@ class DisciplineAdmin(admin.ModelAdmin):
     fields = ('title', 'description', 'private', 'test_in_order', 'dojo')
 
     def save_model(self, request, obj, form, change):
-        obj.created_by = Student.objects.get(user=request.user)
+        obj.created_by = get_user_model().objects.get(id=request.user.id)
         obj.save()
 
 

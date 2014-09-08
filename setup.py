@@ -24,7 +24,8 @@ install_requires = [
     'django-allauth==0.16.1',
     'django-floppyforms==1.1.1',
     'django-zurb-foundation==5.1.1',
-    'django-custom-user==0.4',
+    'Sphinx==1.2.3',
+    'sphinx_rtd_theme==0.1.6',
 ]
 
 

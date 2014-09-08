@@ -7,9 +7,9 @@ import belts.views as belts_views
     /student/newuser/  -- NewUser's dashboard
     /dojo/timberwyck/ -- Dojo homepage
     /discipline/kerbal/ -- discpline detail
-    /discipline/kerbal/launch/ -- test detail
-    /discipline/kerbal/launch/attempts/ -- test attempt list
-
+    /discipline/kerbals/launch/ -- test detail
+    /discipline/kerbals/launch/attempts/ -- test attempt list
+    /discipline/astronomy/ -- discpline detail
 '''
 
 urlpatterns = patterns('',
