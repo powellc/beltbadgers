@@ -1,0 +1,4 @@
+include README.md
+recursive-include beltbadgers/static *
+recursive-include beltbadgers/templates *
+recursive-include beltbadgers/apps *

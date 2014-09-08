@@ -1,0 +1,15 @@
+---
+server: beltbadgers.com
+domainname: beltbadgers.com
+mode: Dev
+deployment_name: beltbadgers
+locale: en_US.UTF-8
+timezone: America/New_York
+project_repo: git@github.com:powellc/beltbadgers.git
+branch: master
+dbpass: password
+port_number: 30000
+postgis: False
+bower: True
+sentry_key: None
+secret_key: ThisIsNotASecret
